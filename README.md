@@ -103,9 +103,9 @@ MIT License - see [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **Email**: support@eduaid.org
+- **Email**: Kavyanshkrishan@gmail.com
 - **Website**: [https://eduaid.org](https://eduaid.org)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/eduaid/issues)
+- **Issues**: [GitHub Issues](https://github.com/radharahiram-ux/eduaid/issues)
 
 ---
 
