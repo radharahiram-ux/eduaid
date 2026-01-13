@@ -1,0 +1,211 @@
+    :root {
+      --royal-blue: #0A2342;
+      --royal-blue-darker: #081C33;
+      --gold-accent: #B8860B;
+      --gold-accent-hover: #D4AF37;
+      --background-cream: #FDFBF6;
+      --text-dark: #2C3A47;
+      --heading-font: 'Merriweather', serif;
+      --body-font: 'Source Sans Pro', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--body-font);
+      background: var(--background-cream);
+      color: var(--text-dark);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .split-container {
+      display: flex;
+      width: 100%;
+    }
+
+    /* Left Panel */
+    .left-panel {
+      flex: 1;
+      background: linear-gradient(to bottom right, var(--royal-blue), var(--royal-blue-darker));
+      color: var(--background-cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px;
+      animation: fadeInLeft 1.2s ease forwards;
+    }
+
+    .left-panel h1 {
+      font-family: var(--heading-font);
+      font-size: 2.6rem;
+      margin-bottom: 20px;
+      color: var(--background-cream);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 1s ease forwards 0.5s;
+    }
+
+    .left-panel p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      opacity: 0.8;
+      max-width: 500px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 1s ease forwards 0.8s;
+    }
+
+    /* Right Panel */
+    .right-panel {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.08);
+      animation: fadeInRight 1.2s ease forwards;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 380px;
+      padding: 40px;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background: #fff;
+      transform: scale(0.95);
+      opacity: 0;
+      animation: popUp 0.8s ease forwards 1s;
+    }
+
+    .login-box h2 {
+      font-family: var(--heading-font);
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+      color: var(--royal-blue);
+      text-align: center;
+    }
+
+    .login-box label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .login-box input,
+    .login-box select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .login-box input:focus,
+    .login-box select:focus {
+      border-color: var(--gold-accent);
+      outline: none;
+      box-shadow: 0 0 8px rgba(184, 134, 11, 0.4);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold-accent);
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: var(--gold-accent-hover);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Forgot Password + Signup */
+    .forgot {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .forgot:hover {
+      color: var(--gold-accent);
+    }
+
+    .signup {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .signup a {
+      color: var(--royal-blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .signup a:hover {
+      color: var(--gold-accent);
+    }
+
+    /* Animations */
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes popUp {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }

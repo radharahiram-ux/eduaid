@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAid - Teacher Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='teacher_dashboard.css') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1><i class="fas fa-chalkboard-teacher"></i> Teacher Dashboard</h1>
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ total_students }}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value high-risk-count">{{ high_risk_count }}</div>
+                        <div class="stat-label">High-Risk Students</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ avg_gpa }}</div>
+                        <div class="stat-label">Average GPA</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <div class="teacher-info">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Teacher ID: {{ session.get('teacher_id', 'N/A') }}</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <h2 class="controls-title"><i class="fas fa-filter"></i> Filter & Sort Students</h2>
+            <form method="get" class="controls-form">
+                <div class="form-group">
+                    <label for="sort">Sort by:</label>
+                    <select id="sort" name="sort">
+                        <option value="risk_desc" {% if sort=='risk_desc' %}selected{% endif %}>Risk (High to Low)</option>
+                        <option value="risk_asc" {% if sort=='risk_asc' %}selected{% endif %}>Risk (Low to High)</option>
+                        <option value="gpa_desc" {% if sort=='gpa_desc' %}selected{% endif %}>GPA (High to Low)</option>
+                        <option value="gpa_asc" {% if sort=='gpa_asc' %}selected{% endif %}>GPA (Low to High)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="min_risk">Minimum Risk %:</label>
+                    <input type="number" id="min_risk" name="min_risk" value="{{ min_risk }}" min="0" max="100" step="1">
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Apply Filters</button>
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-outline"><i class="fas fa-refresh"></i> Reset</a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary"><i class="fas fa-home"></i> Home</a>
+            </form>
+        </div>
+
+        <!-- Students Table Section -->
+        <div class="students-section">
+            <h2 class="section-title"><i class="fas fa-users"></i> Student Overview ({{ students|length }} students)</h2>
+            
+            {% if students|length > 0 %}
+                <div class="table-container">
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Student</th>
+                                <th><i class="fas fa-graduation-cap"></i> GPA</th>
+                                <th><i class="fas fa-calendar-check"></i> Attendance</th>
+                                <th><i class="fas fa-exclamation-triangle"></i> Risk Level</th>
+                                <th><i class="fas fa-cog"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in students %}
+                                {% set gpa = ((s.sem1_grade + s.sem2_grade) / 4.0) | round(2) %}
+                                {% set attendance = 90 - (loop.index0 * 2) %}
+                                <tr>
+                                    <td>
+                                        <div class="student-name">
+                                            <div class="student-avatar">
+                                                {{ s.student_name[0] if s.student_name else s.user.email[0] }}
+                                            </div>
+                                            <div>
+                                                <div>{{ s.student_name or s.user.email }}</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-light);">
+                                                    ID: {{ s.student_identifier or 'N/A' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="gpa-value">
+                                            <i class="fas fa-chart-line"></i> {{ gpa }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="attendance-value">
+                                            <i class="fas fa-calendar"></i> {{ attendance }}%
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill {% if attendance >= 85 %}attendance-high{% elif attendance >= 70 %}attendance-medium{% else %}attendance-low{% endif %}" 
+                                                 style="width: {{ attendance }}%"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="risk-value {% if s.dropout_prediction >= 70 %}risk-high{% elif s.dropout_prediction >= 50 %}risk-medium{% else %}risk-low{% endif %}">
+                                            <i class="fas {% if s.dropout_prediction >= 70 %}fa-exclamation-circle{% elif s.dropout_prediction >= 50 %}fa-exclamation-triangle{% else %}fa-check-circle{% endif %}"></i>
+                                            {{ s.dropout_prediction | round(1) }}%
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('student_detail', user_id=s.user_id) }}" class="view-link">
+                                            <i class="fas fa-eye"></i> Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-user-slash"></i>
+                    <h3>No Students Found</h3>
+                    <p>No students match your current filter criteria. Try adjusting your filters or resetting to view all students.</p>
+                    <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-primary" style="margin-top: 20px;">
+                        <i class="fas fa-refresh"></i> Reset Filters
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="dashboard-footer">
+            <p>EduAid Teacher Portal • {{ now.year if now else "2025" }} • Empowering Educators, Transforming Futures</p>
+        </div>
+    </div>
+</body>
+</html>

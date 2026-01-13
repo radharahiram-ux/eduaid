@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduAid - Student Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='student_dashboard.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">EduAid</div>
+    <nav>
+      <ul>
+        <li class="active">Dashboard</li>
+        <li>My Performance</li>
+        <li>Attendance</li>
+        <li>NGO Help</li>
+        <li>Resources</li>
+        <li>Settings</li>
+      </ul>
+    </nav>
+    <div class="user-info">Welcome, {{ student_name }}</div>
+    <div class="logout-container">
+      <a href="{{ url_for('logout') }}">
+        <button class="btn-logout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+          </svg>
+          Logout
+        </button>
+      </a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div>
+        <h1>Welcome to your Student Portal</h1>
+        <p>Track your progress, attendance, and get help when you need it!</p>
+      </div>
+      <div class="student-id">ID: {{ student_id }}</div>
+    </header>
+
+    <section class="summary-cards">
+      <div class="card">
+        <div class="card-title">GPA</div>
+        <div class="card-main-value">{{ gpa }} / 10</div>
+        <div class="card-sub-value">Last semester: {{ last_gpa }}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Attendance</div>
+        <div class="card-main-value">{{ attendance_percent }}%</div>
+        <div class="card-sub-value">Absences: {{ absences }}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Next Exam</div>
+        <div class="card-main-value">{{ next_exam_subject }}</div>
+        <div class="card-sub-value">Date: {{ next_exam_date }}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">NGO Help</div>
+        <div class="card-main-value">{{ ngo_available }} Available</div>
+        <button class="btn btn-gold" style="margin-top: 10px;">View Options</button>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="card">
+        <h2>Academic Performance</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Grade</th>
+              <th>Teacher Feedback</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in performance_rows %}
+            <tr>
+              <td>{{ row.subject }}</td>
+              <td class="grade grade-{{ row.grade[0] }}">{{ row.grade }}</td>
+              <td class="feedback">{{ row.feedback }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="right-column">
+        <div class="card" style="margin-bottom: 30px;">
+          <h2>Attendance Record</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Present</th>
+                <th>Absent</th>
+                <th>Leave</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in attendance_rows %}
+              <tr>
+                <td>{{ row.month }}</td>
+                <td>{{ row.present }}</td>
+                <td>{{ row.absent }}</td>
+                <td>{{ row.leave }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h2>NGO Help Options</h2>
+          <ul class="ngo-list">
+            {% for ngo in ngos %}
+              <li class="ngo-item">
+                  <div class="ngo-details">
+                      <div class="name">{{ ngo.name }}</div>
+                      <div class="description">{{ ngo.desc }}</div>
+                  </div>
+                  <button 
+                    class="btn contact-ngo {% if loop.index0 == 0 %}btn-blue{% else %}btn-gold{% endif %}"
+                    data-ngo-id="{{ ngo.id }}"
+                    data-ngo-name="{{ ngo.name }}">
+                    {{ ngo.cta }}
+                  </button>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <!-- NGO Contact Modal -->
+<div id="contactModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 400px; max-width: 90%;">
+      <h3>Contact <span id="modalNgoName"></span></h3>
+      <textarea id="contactMessage" placeholder="Tell them about your situation and how they can help..." style="width: 100%; height: 120px; padding: 10px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+      <div style="display: flex; gap: 10px;">
+          <button id="sendContact" class="btn btn-blue">Send Request</button>
+          <button id="cancelContact" class="btn btn-outline">Cancel</button>
+      </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const contactButtons = document.querySelectorAll('.contact-ngo');
+  const modal = document.getElementById('contactModal');
+  const modalNgoName = document.getElementById('modalNgoName');
+  const contactMessage = document.getElementById('contactMessage');
+  const sendButton = document.getElementById('sendContact');
+  const cancelButton = document.getElementById('cancelContact');
+  
+  let currentNgoId = null;
+  
+  contactButtons.forEach(button => {
+      button.addEventListener('click', function() {
+          currentNgoId = this.getAttribute('data-ngo-id');
+          const ngoName = this.getAttribute('data-ngo-name');
+          modalNgoName.textContent = ngoName;
+          contactMessage.value = '';
+          modal.style.display = 'block';
+      });
+  });
+  
+  cancelButton.addEventListener('click', function() {
+      modal.style.display = 'none';
+  });
+  
+  sendButton.addEventListener('click', function() {
+      const message = contactMessage.value.trim();
+      if (!message) {
+          alert('Please enter a message');
+          return;
+      }
+      
+      // Send the request to the server
+      fetch('/contact_ngo', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `ngo_id=${currentNgoId}&message=${encodeURIComponent(message)}`
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert(data.message);
+              modal.style.display = 'none';
+          } else {
+              alert('Error: ' + data.message);
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred. Please try again.');
+      });
+  });
+  
+  // Close modal when clicking outside
+  modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+          modal.style.display = 'none';
+      }
+  });
+});
+</script>
+</body>
+</html>

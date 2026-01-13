@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduAid - Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}" />
+</head>
+<body>
+  <div class="split-container">
+    <!-- Left Panel with tagline -->
+    <div class="left-panel">
+      <h1>EduAid- Empowering Students, Guiding Futures</h1>
+      <p>
+        Early Support... Lasting Impact...<br>
+        
+      </p>
+    </div>
+
+    <!-- Right Panel with Login Form -->
+    <div class="right-panel">
+      <div class="login-box">
+        <h2>Login to Dashboard</h2>
+        {% if error %}
+        <div style="margin-bottom:10px; color:#B00020; font-weight:600; text-align:center;">{{ error }}</div>
+        {% endif %}
+        <form method="post" action="{{ url_for('login') }}">
+          <label for="role">Select Role</label>
+          <select id="role" name="role" required>
+            <option value="" disabled selected>-- Choose Role --</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="ngo">NGO</option>
+          </select>
+
+          <label>Email:</label>
+          <input type="email" name="email" placeholder="Enter email" required><br>
+
+          <label>Password:</label>
+          <input type="password" name="password" placeholder="Enter password" required><br>
+
+          <button type="submit" class="btn">Login</button>
+
+        </form>
+
+        <!-- Forgot + Signup -->
+        <p class="forgot">Forgot your password?</p>
+        <p class="signup">Don’t have an account? <a href="{{ url_for('signup') }}">Sign up</a></p>
+        <p class="signup"><a href="{{ url_for('index') }}">Back to Home</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

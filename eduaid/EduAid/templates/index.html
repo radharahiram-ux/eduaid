@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduAid - AI-Powered Student Retention</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="#" class="logo">
+        <svg width="260" height="80" viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <g transform="translate(10, 10)">
+            <path d="M30 20a15 15 0 1 1 0 30v5h5v5h-10v-5h5v-5a15 15 0 0 1 0-30z" fill="#B8860B" stroke="#0A2342" stroke-width="2" />
+            
+            <circle cx="30" cy="35" r="3" fill="#0A2342" />
+            <line x1="30" y1="35" x2="25" y2="42" stroke="#0A2342" stroke-width="2"/>
+            <line x1="30" y1="35" x2="35" y2="42" stroke="#0A2342" stroke-width="2"/>
+        
+            <polygon points="15,18 30,10 45,18 30,26" fill="#0A2342"/>
+            <line x1="30" y1="26" x2="30" y2="30" stroke="#0A2342" stroke-width="2"/>
+            <circle cx="30" cy="30" r="2" fill="#0A2342"/>
+          </g>
+        
+          <text x="80" y="45" font-family="Merriweather, serif" font-size="34" font-weight="bold" fill="#0A2342">
+            Edu<tspan fill="#B8860B">Aid</tspan>
+          </text>
+        
+          <text x="80" y="63" font-family="Source Sans Pro, sans-serif" font-size="13" fill="#5A5A5A">
+            Empowering Students
+                    </text>
+
+        </svg>
+      </a>
+      <ul class="nav-links">
+  <li><a href="{{ url_for('student_dashboard') }}">Dashboard</a></li>
+  <li><a href="#about" class="nav-link">About Us</a></li>
+  <li><a href="#contact" class="nav-link">Contact</a></li>
+  <li><a href="{{ url_for('signup') }}" class="nav-link btn btn-accent" style="margin-left:10px;">Sign up</a></li>
+  <li><a href="{{ url_for('login') }}">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">Pioneering Student Success Through Insight</h1>
+      <p class="hero-subtitle">EduAid provides unparalleled predictive analytics to help educational institutions foster student growth and significantly reduce dropout rates.</p>
+      <a href="{{ url_for('login') }}" class="btn btn-accent">Request a Consultation</a>
+    </div>
+  </header>
+
+
+  <main class="container content-sections">
+    <section id="about">
+      <h2>About Us</h2>
+      <p>
+        EduAid is dedicated to empowering students and institutions with AI-driven insights to reduce dropout rates and foster academic success. Our mission is to provide actionable analytics and support for every learner.
+      </p>
+    </section>
+
+    <section id="problem">
+      <h2>The Challenge of Student Attrition</h2>
+      <p>
+        Student dropout is a complex issue driven by academic struggles, financial pressures, mental health challenges, and a lack of institutional support. Many institutions struggle to identify at-risk students early enough to provide effective, timely intervention.
+      </p>
+    </section>
+
+    <section id="solution">
+      <h2>A Tradition of Innovation</h2>
+      <p>
+        Our system leverages state-of-the-art machine learning to analyze academic, behavioral, and engagement data. It provides actionable insights with exceptional accuracy, recommending targeted interventions to ensure no student is left behind.
+      </p>
+    </section>
+
+    <section id="features">
+      <h2>Core Capabilities</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <h3>Predictive Analytics</h3>
+          <p>High-accuracy dropout risk scoring with explainable AI to understand the contributing factors.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Unified Dashboards</h3>
+          <p>Intuitive dashboards for both administrators and students to track progress and alerts.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Wellness Monitoring</h3>
+          <p>Optional weekly wellness check-ins to gather crucial emotional and mental health data.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Custom Interventions</h3>
+          <p>Automated recommendations for academic tutoring, financial guidance, and wellness services.</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="testimonials">
+        <h2>Trusted by Leading Institutions</h2>
+        <blockquote>
+            <p>"Implementing EduAid transformed our retention strategy. The insights are invaluable, and we've seen a measurable increase in student success stories."</p>
+            <footer>
+                <cite>— Dr.Rakesh Kumar, Dean of Student Affairs</cite>
+            </footer>
+        </blockquote>
+    </section>
+
+    <section id="advantages">
+      <h2>Institutional Advantages</h2>
+       <div class="advantages-list">
+        <p> Increase student retention and success rates</p>
+        <p> Improve overall academic outcomes</p>
+        <p> Bolster institutional reputation and prestige</p>
+        <p> Employ data-driven, strategic decision-making</p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>Have questions or want to partner with us? Reach out at <a href="mailto:info@eduaid.com">info@eduaid.com</a> or use our contact form coming soon!</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 EduAid. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

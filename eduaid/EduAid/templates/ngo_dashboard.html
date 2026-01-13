@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduAid - NGO Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='ngo_dashboard.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+      <div class="header-content">
+        <h1><i class="fas fa-hands-helping"></i> NGO Dashboard</h1>
+        <p>Supporting high-risk students on their educational journey</p>
+        
+        <div class="stats-overview">
+          <div class="stat-card">
+            <div class="stat-value high-risk-count">{{ students|length }}</div>
+            <div class="stat-label">High-Risk Students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">{{ students|selectattr('dropout_prediction', '>=', 70)|list|length }}</div>
+            <div class="stat-label">Critical Risk</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">{{ contact_requests|length }}</div>
+            <div class="stat-label">Contact Requests</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Requests Section -->
+    <div class="requests-section">
+      <h2 class="section-title">
+        <i class="fas fa-envelope"></i>
+        Student Contact Requests
+      </h2>
+
+      {% if contact_requests|length > 0 %}
+  {% for request in contact_requests %}
+  <div class="request-card">
+    <div class="request-header">
+      <div class="request-student">{{ request.student.email }}</div>
+      <div class="request-date">{{ request.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+    </div>
+    <div class="request-message">
+      {{ request.message }}
+    </div>
+    <div>
+      <span class="request-status status-{{ request.status }}">{{ request.status|title }}</span>
+    </div>
+    {% if request.status == 'pending' %}
+    <div class="action-buttons" style="margin-top: 15px;">
+      <button class="btn btn-primary" onclick="updateRequestStatus({{ request.id }}, 'approved')">
+        <i class="fas fa-check"></i> Approve
+      </button>
+      <button class="btn btn-secondary" onclick="updateRequestStatus({{ request.id }}, 'rejected')">
+        <i class="fas fa-times"></i> Reject
+      </button>
+      <button class="btn btn-outline" onclick="contactStudent('{{ request.student.email }}')">
+        <i class="fas fa-reply"></i> Reply
+      </button>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% else %}
+  {% endif %}
+    </div>
+
+    <!-- Students Section -->
+    <div class="students-section">
+      <h2 class="section-title">
+        <i class="fas fa-users"></i>
+        Students Requiring Support
+      </h2>
+
+      {% if students|length > 0 %}
+      <div class="students-grid">
+        {% for s in students %}
+        <div class="student-card {% if s.dropout_prediction >= 70 %}high-risk{% elif s.dropout_prediction >= 50 %}medium-risk{% else %}low-risk{% endif %}">
+          <div class="student-header">
+            <div class="student-email">{{ s.user.email }}</div>
+            <div class="risk-badge {% if s.dropout_prediction >= 70 %}risk-high{% elif s.dropout_prediction >= 50 %}risk-medium{% else %}risk-low{% endif %}">
+              <i class="fas fa-exclamation-triangle"></i>
+              {{ s.dropout_prediction | round(2) }}%
+            </div>
+          </div>
+          
+          <div class="student-details">
+            <div class="detail-row">
+              <span class="detail-label">Student ID:</span>
+              <span class="detail-value">{{ s.user_id }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Risk Level:</span>
+              <span class="detail-value">
+                {% if s.dropout_prediction >= 70 %}
+                  Critical
+                {% elif s.dropout_prediction >= 50 %}
+                  Medium
+                {% else %}
+                  Low
+                {% endif %}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Priority:</span>
+              <span class="detail-value">
+                {% if s.dropout_prediction >= 70 %}
+                  <i class="fas fa-fire" style="color: var(--danger-red);"></i> High
+                {% elif s.dropout_prediction >= 50 %}
+                  <i class="fas fa-exclamation" style="color: var(--warning-orange);"></i> Medium
+                {% else %}
+                  <i class="fas fa-check" style="color: var(--success-green);"></i> Low
+                {% endif %}
+              </span>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn btn-primary" onclick="contactStudent('{{ s.user.email }}')">
+              <i class="fas fa-envelope"></i> Contact
+            </button>
+            <button class="btn btn-secondary" onclick="viewProfile('{{ s.user_id }}')">
+              <i class="fas fa-user"></i> Profile
+            </button>
+            <button class="btn btn-outline" onclick="scheduleMeeting('{{ s.user.email }}')">
+              <i class="fas fa-calendar"></i> Meeting
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <i class="fas fa-user-check"></i>
+        <h3>No High-Risk Students</h3>
+        <p>All students are currently performing well. Great job!</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Navigation Section -->
+    <div class="nav-section">
+      <div class="nav-buttons">
+        <a href="{{ url_for('index') }}" class="btn btn-outline">
+          <i class="fas fa-home"></i> Home
+        </a>
+        <a href="{{ url_for('logout') }}" class="btn btn-secondary">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function contactStudent(email) {
+      alert(`Contacting student: ${email}\n\nThis would typically open an email client or messaging interface.`);
+    }
+
+    function viewProfile(userId) {
+      alert(`Viewing profile for user ID: ${userId}\n\nThis would typically navigate to a detailed profile view.`);
+    }
+
+    function scheduleMeeting(email) {
+      alert(`Scheduling meeting with: ${email}\n\nThis would typically open a calendar or scheduling interface.`);
+    }
+
+    function updateRequestStatus(requestId, status) {
+      fetch('/update_request_status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `request_id=${requestId}&status=${status}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(`Request ${status} successfully.`);
+          location.reload();
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      });
+    }
+  </script>
+</body>
+</html>

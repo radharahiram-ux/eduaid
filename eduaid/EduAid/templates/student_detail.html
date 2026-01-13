@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduAid - Student Detail</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='student_detail.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    {% if profile %}
+    <!-- Header Section -->
+    <div class="detail-header">
+      <h1><i class="fas fa-user-graduate"></i> Student Profile</h1>
+      
+      <div class="student-info">
+        <div class="info-card">
+          <div class="info-value">{{ profile.user.email }}</div>
+          <div class="info-label">Email Address</div>
+        </div>
+        <div class="info-card">
+          <div class="info-value">{{ gpa }}</div>
+          <div class="info-label">Current GPA</div>
+        </div>
+        <div class="info-card">
+          <div class="info-value">{{ profile.user_id }}</div>
+          <div class="info-label">Student ID</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <div class="risk-indicator {% if profile.dropout_prediction >= 70 %}risk-high{% elif profile.dropout_prediction >= 50 %}risk-medium{% else %}risk-low{% endif %}">
+          <i class="fas fa-exclamation-triangle"></i>
+          Dropout Risk: {{ profile.dropout_prediction | round(2) }}%
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Attributes -->
+    <div class="main-section">
+      <h2 class="section-title">
+        <i class="fas fa-user-cog"></i>
+        Profile Attributes
+      </h2>
+      
+      <div class="attributes-grid">
+        <div class="attribute-card">
+          <div class="attribute-label">Age at Enrollment</div>
+          <div class="attribute-value">{{ profile.age_enrollment }}</div>
+        </div>
+        
+        <div class="attribute-card">
+          <div class="attribute-label">Semester 1</div>
+          <div class="attribute-value">
+            Enrolled: {{ 'Yes' if profile.sem1_enrolled else 'No' }} | 
+            Approved: {{ 'Yes' if profile.sem1_approved else 'No' }} | 
+            Grade: {{ profile.sem1_grade }}
+          </div>
+        </div>
+        
+        <div class="attribute-card">
+          <div class="attribute-label">Semester 2</div>
+          <div class="attribute-value">
+            Enrolled: {{ 'Yes' if profile.sem2_enrolled else 'No' }} | 
+            Approved: {{ 'Yes' if profile.sem2_approved else 'No' }} | 
+            Grade: {{ profile.sem2_grade }}
+          </div>
+        </div>
+        
+        <div class="attribute-card">
+          <div class="attribute-label">Scholarship</div>
+          <div class="attribute-value">{{ 'Yes' if profile.scholarship else 'No' }}</div>
+        </div>
+        
+        <div class="attribute-card">
+          <div class="attribute-label">Fees Up to Date</div>
+          <div class="attribute-value">{{ 'Yes' if profile.fees_up_to_date else 'No' }}</div>
+        </div>
+        
+        <div class="attribute-card">
+          <div class="attribute-label">Special Needs</div>
+          <div class="attribute-value">{{ 'Yes' if profile.special_needs else 'No' }}</div>
+        </div>
+        
+        <div class="attribute-card">
+          <div class="attribute-label">Debtor Status</div>
+          <div class="attribute-value">{{ 'Yes' if profile.debtor else 'No' }}</div>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- No Profile Found -->
+    <div class="main-section">
+      <h2 class="section-title">Profile Not Found</h2>
+      <p>No profile data is available for this student.</p>
+    </div>
+    {% endif %}
+
+    <!-- Navigation Section -->
+    <div class="nav-section">
+      <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-primary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+      </a>
+      <a href="{{ url_for('index') }}" class="btn btn-outline">
+        <i class="fas fa-home"></i> Home
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+
+

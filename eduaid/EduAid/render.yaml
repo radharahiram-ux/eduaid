@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: eduaid
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///database.db
+      - key: PYTHON_VERSION
+        value: 3.13.7
