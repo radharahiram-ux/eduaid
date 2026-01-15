@@ -101,7 +101,7 @@ pytest --cov=app tests/
 
 MIT License - see [LICENSE](LICENSE) file
 
-### 📞 Contact
+## 📞 Contact
 
 - **Email**: Kavyanshkrishan@gmail.com
 - **Website**: [https://eduaid.org](https://eduaid.org)
